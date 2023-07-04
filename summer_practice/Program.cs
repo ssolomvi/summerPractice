@@ -8,15 +8,15 @@ namespace summer_practice
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             
-            Student st1 = new Student("Соломатина", "Светлана", "Викторовна", "М8О-213Б-21", "C#");
+            Student st1 = new Student("Соломатина", "Светлана", "Викторовна", "М8О-213Б-21", "CSharp");
             Console.WriteLine(st1.ToString());
             Console.WriteLine($"{st1.ChosenCourse} | {st1.Group} | {st1.Name} {st1.Surname} {st1.Patronymic}");
-            Console.WriteLine($"course of student above is: {st1.GetCourseNumber()}");
+            Console.WriteLine($"course of student above is: {st1.CourseNumber}");
             Console.WriteLine($"Hash code: {st1.GetHashCode()}");
             Student st2 = new Student("Иванов", "Иван", "Иванович", "М8О-210Б-22", "Go");
             Console.WriteLine(st2.ToString());
             Console.WriteLine($"Hash code: {st2.GetHashCode()}");
-            Student st3 = new Student("Иванов", "Иван", "Иванович", "М8О-211Б-22", "Go");
+            Student st3 = new Student("Иванов", "Иван", "Иванович", "М8О-211Б-22", "5");
             Console.WriteLine(st3.ToString());
             Console.WriteLine($"Hash code: {st3.GetHashCode()}");
                 
