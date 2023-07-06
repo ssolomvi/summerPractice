@@ -20,21 +20,6 @@ public class Student :
     public Student(string? surname = null, string? name = null, string? patronymic = null, 
         string? group = null, string? chosenCourse = null)
     {
-        /*Surname = string.IsNullOrEmpty(surname)
-            ? throw new ArgumentNullException(nameof(surname))
-            : surname;
-        Name = string.IsNullOrEmpty(name)
-            ? throw new ArgumentNullException(nameof(name))
-            : name;
-        Patronymic = string.IsNullOrEmpty(patronymic)
-            ? throw new ArgumentNullException(nameof(patronymic))
-            : patronymic;
-        Group = string.IsNullOrEmpty(group)
-            ? throw new ArgumentNullException(nameof(group))
-            : group;
-        ChosenCourse = string.IsNullOrEmpty(chosenCourse)
-            ? throw new ArgumentNullException(nameof(chosenCourse))
-            : chosenCourse;*/
         Surname = surname ?? throw new ArgumentNullException(nameof(surname));
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Patronymic = patronymic ?? throw new ArgumentNullException(nameof(patronymic));
@@ -57,13 +42,6 @@ public class Student :
         // М8О-213Б-21
         get => (_group[4] - '0');
     }
-
-    // public int GetCourseNumber()
-    // {
-    //     int courseNumber;
-    //     if (!(int.TryParse(_group.Substring(_group.Length - 2), out courseNumber))) { return 0; }
-    //     return ((DateTime.Now.Year - (2000 + courseNumber)) + (DateTime.Now.Month > 8 ? 1 : 0)) % 5;
-    // }
 
     public string Surname
     {

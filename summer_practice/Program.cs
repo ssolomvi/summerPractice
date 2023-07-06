@@ -1,13 +1,38 @@
-﻿using summer_practice_domain;
+﻿using System.Collections;
+using summer_practice_domain;
 
 namespace summer_practice
 {
-    class Programm
+    sealed class Programm
     {
-        static void Main(string[] args)
+        sealed class IntComaprer : IEqualityComparer<int>
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            
+            private static IntComaprer? _instance;
+
+            private IntComaprer()
+            {
+        
+            }
+
+            public static IntComaprer Instance =>
+                _instance ??= new IntComaprer();
+            public bool Equals(int? x, int? y)
+            {
+                // int is not a reference, though how can i implement IEqualityComparer<int> (if i can)?
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return (x == y);
+            }
+
+            public int GetHashCode(int obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+        public static void StudentTest()
+        {
             Student st1 = new Student("Соломатина", "Светлана", "Викторовна", "М8О-213Б-21", "CSharp");
             Console.WriteLine(st1.ToString());
             Console.WriteLine($"{st1.ChosenCourse} | {st1.Group} | {st1.Name} {st1.Surname} {st1.Patronymic}");
@@ -27,7 +52,7 @@ namespace summer_practice
             hashTable.Add(st1, "a"); hashTable.Add(st2, "b"); hashTable.Add(st3, "c");
             hashTable.Remove(st1);
             Console.WriteLine(hashTable.Count);
-
+            
             /*
             string surname = Console.ReadLine(), name = Console.ReadLine(), patronymic = Console.ReadLine();
             string group = Console.ReadLine(), chosenCourse = Console.ReadLine();
@@ -39,6 +64,42 @@ namespace summer_practice
             {
                 Console.WriteLine(e);
             }*/
+        }
+
+        public static string ToStringIEnumerableIEnumerable<T>(IEnumerable<IEnumerable<T>> collections)
+        {
+            string result = "[";
+            foreach (IEnumerable<T> collection in collections)
+            {
+                string colString = " [ ";
+                colString += string.Join(", ", collection);
+                colString += " ]";
+                result += colString;
+            }
+
+            result += " ]";
+            return result;
+        }
+        
+        public static void CombinationsTest()
+        {
+            int k = 1;
+            int[] set = { 1, 2, 3 };
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.CombinationsWithoutRepetition(3)));
+        }
+
+        static void SubsetsTest()
+        {
+            int[] set = new int[] { 1, 2, 4 };
+            IEqualityComparer<int> comparer;
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetSubsetsWithoutRepetitions(comparer)));
+        }
+
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            int[] set = { 1, 2, 3 };
+            CombinationsTest();
         }
     }
 }
