@@ -16,9 +16,10 @@ public static class GeneratorEnumerableExtensions
     {
         if (!collection.Any()) { return false; }
 
+        int k = 1;
         foreach (var firstElement in collection)
         {
-            foreach (var secondElement in collection.Skip(1))
+            foreach (var secondElement in collection.Skip(k++))
             {
                 if (comparer.Equals(firstElement, secondElement))
                 {

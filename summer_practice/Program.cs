@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq.Expressions;
 using summer_practice_domain;
 
 namespace summer_practice
@@ -16,7 +17,7 @@ namespace summer_practice
 
             public static IntComaprer Instance =>
                 _instance ??= new IntComaprer();
-            public bool Equals(int? x, int? y)
+            public bool Equals(int x, int y)
             {
                 // int is not a reference, though how can i implement IEqualityComparer<int> (if i can)?
                 if (ReferenceEquals(x, y)) return true;
@@ -81,25 +82,57 @@ namespace summer_practice
             return result;
         }
         
-        public static void CombinationsTest()
+        public static void CombinationsTest(IEnumerable<int> set, int length)
         {
-            int k = 1;
-            int[] set = { 1, 2, 3 };
-            Console.WriteLine(ToStringIEnumerableIEnumerable(set.CombinationsWithoutRepetition(3)));
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetCombinationsWithoutRepetitions(length, IntComaprer.Instance)));
         }
 
-        static void SubsetsTest()
+        public static void SubsetsTest(IEnumerable<int> set)
         {
-            int[] set = new int[] { 1, 2, 4 };
-            IEqualityComparer<int> comparer;
-            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetSubsetsWithoutRepetitions(comparer)));
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetSubsetsWithoutRepetitions(IntComaprer.Instance)));
+        }
+
+        public static void PermutationsTest(IEnumerable<int> set)
+        {
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetPermutationsWithoutRepetitions(IntComaprer.Instance)));
+        }
+
+        public static void Lab2Test()
+        {
+            int[] set = { 1, 2, 3, 4 };
+            Console.WriteLine("=====Combinations Test=====");
+            try
+            {
+                CombinationsTest(set, 3);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+            }
+            Console.WriteLine("=====  Subsets  Test  =====");
+            try
+            {
+                SubsetsTest(set);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+            }
+            Console.WriteLine("=====Permutations Test=====");
+            try
+            {
+                PermutationsTest(set);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            int[] set = { 1, 2, 3 };
-            CombinationsTest();
+            Lab2Test();
         }
     }
 }
