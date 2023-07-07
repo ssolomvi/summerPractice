@@ -17,8 +17,8 @@ namespace summer_practice_domain;
 /*
 internal static int InternalBinarySearch(T[] array, int index, int length, T value, IComparer<T> comparer)
 {
-    Debug.Assert(array != null, "Check the arguments in the caller!");
-    Debug.Assert(index >= 0 && length >= 0 && (array.Length - index >= length), "Check the arguments in the caller!");
+    // todo Assert(array != null, "Check the arguments in the caller!");
+    // todo Assert(index >= 0 && length >= 0 && (array.Length - index >= length), "Check the arguments in the caller!");
 
     int lo = index;
     int hi = index + length - 1;
@@ -70,63 +70,14 @@ public static class SortingMethodsImpl
     /// <returns>Bool, which indicates that sorting mode is ascending and x is less than y</returns>
     private static bool CompareInner<T>(T x, T y, SortingMode sortingMode, IComparer<T> comparer)
     {
-        // ascending and x < y
         return ((sortingMode == SortingMode.Ascending) & (comparer.Compare(x, y) < 0));
     }
     
     private static void Swap<T>(T[] a, int i, int j)
     {
-        // Debug.Assert(i != j);
         (a[i], a[j]) = (a[j], a[i]);
     }
     
-    #region HeapSort
-    private static T[] HeapSorting<T>(T[] keys, SortingMode sortingMode, IComparer<T> comparer)
-    {
-        // Debug.Assert(comparer != null);
-        // Debug.Assert(!keys.IsEmpty);
-        T[] toReturn = (T[])keys.Clone();
-        
-        int n = toReturn.Length;
-        for (int i = n >> 1; i >= 1; i--)
-        {
-            DownHeap(toReturn, i, n, sortingMode, comparer);
-        }
-
-        for (int i = n; i > 1; i--)
-        {
-            Swap(toReturn, 0, i - 1);
-            DownHeap(toReturn, 1, i - 1, sortingMode, comparer);
-        }
-
-        return toReturn;
-    }
-
-    private static void DownHeap<T>(T[] keys, int i, int n, SortingMode sortingMode, IComparer<T> comparer)
-    {
-        // Debug.Assert(comparer != null);
-
-        T d = keys[i - 1];
-        while (i <= n >> 1)
-        {
-            int child = 2 * i;
-            if (child < n && CompareInner(keys[child - 1], keys[child], sortingMode, comparer))
-            {
-                child++;
-            }
-
-            if (!CompareInner(d, keys[child - 1], sortingMode, comparer))
-                break;
-
-            keys[i - 1] = keys[child - 1];
-            i = child;
-        }
-
-        keys[i - 1] = d;
-    }
-
-    #endregion
-
     #region InsertionSort
 
     private static T[] InsertionSorting<T>(T[] keys, SortingMode sortingMode, IComparer<T> comparer)
@@ -150,26 +101,78 @@ public static class SortingMethodsImpl
 
         return toReturn;
     }
+
+    #endregion
     
-    /*
-private static void InsertionSorting<T>(T[] keys, IComparer<T> comparer)
-{
-    for (int i = 0; i < keys.Length - 1; i++)
+    #region SelectionSort
+    
+    private static T[] SelectionSorting<T>(T[] keys, SortingMode sortingMode, IComparer<T> comparer)
     {
-        T t = keys[i + 1];
+        T[] toReturn = (T[])keys.Clone();
 
-        int j = i;
-        while (j >= 0 && comparer.Compare(t, keys[j]) < 0)
+        for (int i = 0; i < toReturn.Length - 1; i++)
         {
-            keys[j + 1] = keys[j];
-            j--;
-        }
-            
-        keys[j + 1] = t;
-    }
-}
-*/
+            int min = i;
+            for (int j = i + 1; j < toReturn.Length; j++)
+            {
+                if (CompareInner(toReturn[j], toReturn[min], sortingMode, comparer))
+                {
+                    min = j;
+                }
+            }
 
+            if (min != i)
+            {
+                Swap(toReturn, i, min);
+            }
+        }
+        return toReturn;
+    }
+
+    #endregion
+
+    #region HeapSort
+    private static T[] HeapSorting<T>(T[] keys, SortingMode sortingMode, IComparer<T> comparer)
+    {
+        // todo: Assert(comparer != null);
+        // todo: Assert(!keys.IsEmpty);
+        T[] toReturn = (T[])keys.Clone();
+        
+        int n = toReturn.Length;
+        for (int i = n >> 1; i >= 1; i--)
+        {
+            DownHeap(toReturn, i, n, sortingMode, comparer);
+        }
+
+        for (int i = n; i > 1; i--)
+        {
+            Swap(toReturn, 0, i - 1);
+            DownHeap(toReturn, 1, i - 1, sortingMode, comparer);
+        }
+
+        return toReturn;
+    }
+
+    private static void DownHeap<T>(T[] keys, int i, int n, SortingMode sortingMode, IComparer<T> comparer)
+    {
+        T d = keys[i - 1];
+        while (i <= n >> 1)
+        {
+            int child = 2 * i;
+            if (child < n && CompareInner(keys[child - 1], keys[child], sortingMode, comparer))
+            {
+                child++;
+            }
+
+            if (!CompareInner(d, keys[child - 1], sortingMode, comparer))
+                break;
+
+            keys[i - 1] = keys[child - 1];
+            i = child;
+        }
+
+        keys[i - 1] = d;
+    }
 
     #endregion
 
@@ -249,40 +252,12 @@ private static void InsertionSorting<T>(T[] keys, IComparer<T> comparer)
     }
     
     #endregion
-    
-    #region SelectionSort
-    
-    private static T[] SelectionSorting<T>(T[] keys, SortingMode sortingMode, IComparer<T> comparer)
-    {
-        T[] toReturn = (T[])keys.Clone();
 
-        for (int i = 0; i < toReturn.Length - 1; i++)
-        {
-            int min = i;
-            for (int j = i + 1; j < toReturn.Length; j++)
-            {
-                if (CompareInner(toReturn[j], toReturn[min], sortingMode, comparer))
-                {
-                    min = j;
-                }
-            }
-
-            if (min != i)
-            {
-                Swap(toReturn, i, min);
-            }
-        }
-        return toReturn;
-    }
-
-    #endregion
-    
     public static T[] Sort<T>(this T[] toSort, SortingMode sortingMode, SortingMethod sortingMethod)
         where T : IComparable<T>
     {
         var comparer = Comparer<T>.Default;
         return toSort.Sort(sortingMode, sortingMethod, comparer);
-        // return Sort(toSort, sortingMode, sortingMethod, comparer.Compare);
     }
 
     public static T[] Sort<T>(this T[] toSort, SortingMode sortingMode, SortingMethod sortingMethod, IComparer<T> comparer)

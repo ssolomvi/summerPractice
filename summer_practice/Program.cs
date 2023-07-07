@@ -6,17 +6,17 @@ namespace summer_practice
 {
     sealed class Programm
     {
-        sealed class IntComaprer : IEqualityComparer<int>
+        sealed class IntComaprerWithIComparer : IEqualityComparer<int>, IComparer<int>
         {
-            private static IntComaprer? _instance;
+            private static IntComaprerWithIComparer? _instance;
 
-            private IntComaprer()
+            private IntComaprerWithIComparer()
             {
         
             }
 
-            public static IntComaprer Instance =>
-                _instance ??= new IntComaprer();
+            public static IntComaprerWithIComparer Instance =>
+                _instance ??= new IntComaprerWithIComparer();
             public bool Equals(int x, int y)
             {
                 // int is not a reference, though how can i implement IEqualityComparer<int> (if i can)?
@@ -31,7 +31,13 @@ namespace summer_practice
             {
                 return obj.GetHashCode();
             }
+
+            public int Compare(int x, int y)
+            {
+                return (x - y);
+            }
         }
+        
         public static void StudentTest()
         {
             Student st1 = new Student("Соломатина", "Светлана", "Викторовна", "М8О-213Б-21", "CSharp");
@@ -86,17 +92,17 @@ namespace summer_practice
         
         public static void CombinationsTest(IEnumerable<int> set, int length)
         {
-            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetCombinationsWithoutRepetitions(length, IntComaprer.Instance)));
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetCombinationsWithoutRepetitions(length, IntComaprerWithIComparer.Instance)));
         }
 
         public static void SubsetsTest(IEnumerable<int> set)
         {
-            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetSubsetsWithoutRepetitions(IntComaprer.Instance)));
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetSubsetsWithoutRepetitions(IntComaprerWithIComparer.Instance)));
         }
 
         public static void PermutationsTest(IEnumerable<int> set)
         {
-            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetPermutationsWithoutRepetitions(IntComaprer.Instance)));
+            Console.WriteLine(ToStringIEnumerableIEnumerable(set.GetPermutationsWithoutRepetitions(IntComaprerWithIComparer.Instance)));
         }
 
         public static void Lab2Test()
@@ -134,7 +140,19 @@ namespace summer_practice
         #endregion
 
         #region lab3 test
-
+        sealed class IntComparerWithComparer : Comparer<int>
+        {
+            public override int Compare(int x, int y)
+            {
+                return (x - y);
+            }
+        }
+        
+        public static int Comparison(int x, int y)
+        {
+            return (x - y);
+        }
+        
         public static void ToStringArray<T>(T[] arr)
         {
             Console.WriteLine(string.Join(", ", arr));
@@ -146,7 +164,7 @@ namespace summer_practice
             int Max = 200;
             Random randNum = new Random();
             int[] set = Enumerable
-                .Repeat(0, 100)
+                .Repeat(0, 10)
                 .Select(i => randNum.Next(Min, Max))
                 .ToArray();
             // int[] set = { 9, 7, 6, 5, 3, 11, 10 };
@@ -156,13 +174,13 @@ namespace summer_practice
             var selectionSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.SelectionSort);
             ToStringArray(selectionSorted);
             Console.WriteLine("=====Insertion sorted=====");
-            var insertionSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.InsertionSort);
+            var insertionSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.InsertionSort, IntComaprerWithIComparer.Instance);
             ToStringArray(insertionSorted);
             Console.WriteLine("=====Merge sorted=====");
-            var mergeSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.MergeSort);
+            var mergeSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.MergeSort, new IntComparerWithComparer());
             ToStringArray(mergeSorted);
             Console.WriteLine("=====Heap sorted=====");
-            var heapSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.HeapSort);
+            var heapSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.HeapSort, Comparison);
             ToStringArray(heapSorted);
             Console.WriteLine("=====Quick sorted=====");
             var quickSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.QuickSort);
@@ -175,9 +193,9 @@ namespace summer_practice
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            // SubsetsTest();
+            // StudentTest();
             // Lab2Test();
-            
+            Lab3Test();
         }
     }
 }
