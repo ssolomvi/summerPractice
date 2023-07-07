@@ -132,7 +132,11 @@ namespace summer_practice
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Lab2Test();
+            // SubsetsTest();
+            // Lab2Test();
+
+            List<int> set = new List<int>(){ 9, 1, 4, 6 };
+            set.Sort();
         }
     }
 }
