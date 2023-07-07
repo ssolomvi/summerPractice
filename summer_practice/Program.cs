@@ -67,6 +67,8 @@ namespace summer_practice
             }*/
         }
 
+        #region Lab2 test
+
         public static string ToStringIEnumerableIEnumerable<T>(IEnumerable<IEnumerable<T>> collections)
         {
             string result = "[";
@@ -129,14 +131,53 @@ namespace summer_practice
             }
         }
 
+        #endregion
+
+        #region lab3 test
+
+        public static void ToStringArray<T>(T[] arr)
+        {
+            Console.WriteLine(string.Join(", ", arr));
+        }
+
+        static void Lab3Test()
+        {
+            int Min = -100;
+            int Max = 200;
+            Random randNum = new Random();
+            int[] set = Enumerable
+                .Repeat(0, 100)
+                .Select(i => randNum.Next(Min, Max))
+                .ToArray();
+            // int[] set = { 9, 7, 6, 5, 3, 11, 10 };
+            Console.WriteLine("Original array");
+            ToStringArray(set);
+            Console.WriteLine("=====Selection sorted=====");
+            var selectionSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.SelectionSort);
+            ToStringArray(selectionSorted);
+            Console.WriteLine("=====Insertion sorted=====");
+            var insertionSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.InsertionSort);
+            ToStringArray(insertionSorted);
+            Console.WriteLine("=====Merge sorted=====");
+            var mergeSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.MergeSort);
+            ToStringArray(mergeSorted);
+            Console.WriteLine("=====Heap sorted=====");
+            var heapSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.HeapSort);
+            ToStringArray(heapSorted);
+            Console.WriteLine("=====Quick sorted=====");
+            var quickSorted = set.Sort(SortingMethodsImpl.SortingMode.Ascending, SortingMethodsImpl.SortingMethod.QuickSort);
+            ToStringArray(quickSorted);
+        }
+
+        #endregion
+        
+        
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             // SubsetsTest();
             // Lab2Test();
-
-            List<int> set = new List<int>(){ 9, 1, 4, 6 };
-            set.Sort();
+            
         }
     }
 }
