@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Globalization;
 using System.Linq.Expressions;
 using summer_practice_domain;
 
@@ -188,14 +189,80 @@ namespace summer_practice
         }
 
         #endregion
-        
+
+        #region lab4 test
+
+        public static double IntegrandFunc(double x)
+        {
+            return Math.Cos(x);
+        }
+
+        static double GetMs(long tick)
+        {
+            return tick * 1.0 / 10000000;
+        }
+
+        static void Lab4Test(IIntegralCalculation.Integrand integrand, double lowerBound, double upperBound, double eps)
+        {
+            IntegralCalculationRuleRectangle leftRectangleMethod = new IntegralCalculationLeftRuleRectangle();
+            IntegralCalculationRuleRectangle rightRectangleMethod = new IntegralCalculationRightRuleRectangle();
+            IntegralCalculationRuleRectangle middleRectangleMethod = new IntegralCalculationMiddleRuleRectangle();
+            
+            var watchLeft = System.Diagnostics.Stopwatch.StartNew();
+            KeyValuePair<double, int> resLeft = leftRectangleMethod.IntegralCalculation(integrand, lowerBound, upperBound, eps);
+            watchLeft.Stop();
+            var elapsedLeft = GetMs(watchLeft.ElapsedTicks);
+
+            var watchRight = System.Diagnostics.Stopwatch.StartNew();
+            KeyValuePair<double, int> resRight = rightRectangleMethod.IntegralCalculation(integrand, lowerBound, upperBound, eps);
+            watchRight.Stop();
+            var elapsedRight = GetMs(watchRight.ElapsedTicks);
+            
+            var watchMiddle = System.Diagnostics.Stopwatch.StartNew();
+            KeyValuePair<double, int> resMiddle = middleRectangleMethod.IntegralCalculation(integrand, lowerBound, upperBound, eps);
+            watchMiddle.Stop();
+            var elapsedMiddle = GetMs(watchMiddle.ElapsedTicks);
+
+            
+            IntegralCalculationTrapezoidal trapezoidalMethod = new IntegralCalculationTrapezoidal();
+            var watchTrapezoidal = System.Diagnostics.Stopwatch.StartNew();
+            KeyValuePair<double, int> resTrapez = trapezoidalMethod.IntegralCalculation(integrand, lowerBound, upperBound, eps);
+            watchTrapezoidal.Stop();
+            var elapsedTrapezoidal = GetMs(watchTrapezoidal.ElapsedTicks);
+            
+            IntegralCalculationSimpsonRule simpsonRule = new IntegralCalculationSimpsonRule();
+            var watchSimpson = System.Diagnostics.Stopwatch.StartNew();
+            KeyValuePair<double, int> resSimpson = simpsonRule.IntegralCalculation(integrand, lowerBound, upperBound, eps);
+            watchSimpson.Stop();
+            var elapsedSimpson = GetMs(watchSimpson.ElapsedTicks);
+            
+            Console.WriteLine("With eps = {0}", eps.ToString(CultureInfo.InvariantCulture));
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", "Method name", "Time consumed ms", "Result", "Iterations count");
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", leftRectangleMethod.MethodName, elapsedLeft.ToString(), resLeft.Key.ToString(CultureInfo.InvariantCulture), resLeft.Value.ToString());
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", rightRectangleMethod.MethodName, elapsedRight.ToString(), resRight.Key.ToString(CultureInfo.InvariantCulture), resRight.Value.ToString());
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", middleRectangleMethod.MethodName, elapsedMiddle.ToString(), resMiddle.Key.ToString(CultureInfo.InvariantCulture), resMiddle.Value.ToString());
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", trapezoidalMethod.MethodName, elapsedTrapezoidal.ToString(), resTrapez.Key.ToString(CultureInfo.InvariantCulture), resTrapez.Value.ToString());
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", simpsonRule.MethodName, elapsedSimpson.ToString(), resTrapez.Key.ToString(CultureInfo.InvariantCulture), resSimpson.Value.ToString());
+        }
+
+        #endregion
         
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             // StudentTest();
-            Lab2Test();
+            // Lab2Test();
             // Lab3Test();
+            
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+// the code that you want to measure comes here
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            
+            double lowerBound = 0, upperBound = 5;
+            double eps = 1.0 / 1000000;
+            IIntegralCalculation.Integrand integrand = IntegrandFunc;
+            Lab4Test(integrand, lowerBound, upperBound, eps);
         }
     }
 }

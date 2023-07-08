@@ -9,17 +9,17 @@ public interface IIntegralCalculation
 
     public delegate double Integrand(double x);
 
-    public double IntegralCalculation(Integrand integrand, double lowerBound, double highBound, double eps);
+    public KeyValuePair<double, int> IntegralCalculation(Integrand integrand, double lowerBound, double highBound, double eps);
 }
 
 public abstract class IntegralCalculationRuleRectangle : IIntegralCalculation
 {
-    public string? MethodName { get; }
+    public abstract string MethodName { get; }
 
     protected abstract double MethodArgument(IIntegralCalculation.Integrand integrand, double lowerBound, int interval,
         double intervalWidth);
 
-    public double IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
+    public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
         double prevResult, result = 0;
         int iterationNumber = 1;
@@ -40,7 +40,7 @@ public abstract class IntegralCalculationRuleRectangle : IIntegralCalculation
             ++iterationNumber;
         } while (Math.Abs(prevResult - result) >= eps);
 
-        return result;
+        return new KeyValuePair<double, int>(result, iterationNumber);
     }
 }
 
@@ -50,7 +50,7 @@ public class IntegralCalculationLeftRuleRectangle : IntegralCalculationRuleRecta
     {
         MethodName = "Left rule rectangle method";
     }
-    public new string MethodName { get; }
+    public override string MethodName { get; }
 
     protected override double MethodArgument(IIntegralCalculation.Integrand integrand, double lowerBound, int interval, double intervalWidth)
     {
@@ -65,7 +65,7 @@ public class IntegralCalculationRightRuleRectangle : IntegralCalculationRuleRect
         MethodName = "Right rule rectangle method";
     }
     
-    public new string MethodName { get; }
+    public override string MethodName { get; }
 
     protected override double MethodArgument(IIntegralCalculation.Integrand integrand, double lowerBound, int interval, double intervalWidth)
     {
@@ -75,7 +75,7 @@ public class IntegralCalculationRightRuleRectangle : IntegralCalculationRuleRect
 
 public class IntegralCalculationMiddleRuleRectangle : IntegralCalculationRuleRectangle
 {
-    public new string MethodName { get; }
+    public override string MethodName { get; }
 
     protected override double MethodArgument(IIntegralCalculation.Integrand integrand, double lowerBound, int interval, double intervalWidth)
     {
@@ -92,7 +92,7 @@ public class IntegralCalculationTrapezoidal : IIntegralCalculation
 {
     public string? MethodName { get; }
     
-    public double IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
+    public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
         double prevResult, result = 0;
         int iterationNumber = 1;
@@ -112,7 +112,7 @@ public class IntegralCalculationTrapezoidal : IIntegralCalculation
             ++iterationNumber;
         } while (Math.Abs(prevResult - result) >= eps);
 
-        return result;
+        return new KeyValuePair<double, int>(result, iterationNumber);
     }
 
     public IntegralCalculationTrapezoidal()
@@ -125,10 +125,11 @@ public class IntegralCalculationSimpsonRule : IIntegralCalculation
 {
     public string? MethodName { get; }
     
-    public double IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
+    public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
         double prevResult, result = 0;
         int iterationNumber = 1;
+        
         do
         {
             int numberOfPartitions = 1 << (iterationNumber + 1);
@@ -138,24 +139,20 @@ public class IntegralCalculationSimpsonRule : IIntegralCalculation
             result = (integrand(lowerBound) + integrand(highBound)) / 3 * widthOfPartition;
 
             double resPart1 = 0, resPart2 = 0;
-            for (int j = 0; j < (numberOfPartitions >> 1); j++)
+            int j = 0;
+            for (j = 0; j < (numberOfPartitions >> 1); j++)
             {
                 resPart1 += integrand(lowerBound + j * 2 * widthOfPartition);
-            }
-
-            result += resPart1 / 3 * 2 * widthOfPartition;
-
-            for (int j = 0; j <= (numberOfPartitions >> 1); j++)
-            {
                 resPart2 += integrand(lowerBound + (j * 2 - 1) * widthOfPartition);
             }
-
+            resPart2 += integrand(lowerBound + (j * 2 - 1) * widthOfPartition);
+            result += resPart1 / 3 * 2 * widthOfPartition;
             result += resPart2 / 3 * 4 * widthOfPartition; 
             
             ++iterationNumber;
         } while (Math.Abs(prevResult - result) >= eps);
 
-        return result;
+        return new KeyValuePair<double, int>(result, iterationNumber);
     }
 
     public IntegralCalculationSimpsonRule()
