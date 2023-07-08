@@ -253,14 +253,9 @@ namespace summer_practice
             // StudentTest();
             // Lab2Test();
             // Lab3Test();
-            
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-// the code that you want to measure comes here
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            
+
             double lowerBound = 0, upperBound = 5;
-            double eps = 1.0 / 1000000;
+            double eps = 1.0 / 1000000000;
             IIntegralCalculation.Integrand integrand = IntegrandFunc;
             Lab4Test(integrand, lowerBound, upperBound, eps);
         }
