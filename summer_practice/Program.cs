@@ -107,11 +107,11 @@ namespace summer_practice
 
         public static void Lab2Test()
         {
-            int[] set = { 1, 2, 3, 4 };
+            int[] set = { 1, 2, 3 };
             Console.WriteLine("=====Combinations Test=====");
             try
             {
-                CombinationsTest(set, 3);
+                CombinationsTest(set, 2);
             }
             catch (ArgumentException e)
             {
@@ -194,8 +194,8 @@ namespace summer_practice
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             // StudentTest();
-            // Lab2Test();
-            Lab3Test();
+            Lab2Test();
+            // Lab3Test();
         }
     }
 }

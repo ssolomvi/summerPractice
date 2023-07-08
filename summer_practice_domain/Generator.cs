@@ -55,7 +55,7 @@ public static class GeneratorEnumerableExtensions
             yield return new List<T>();
         else
         {
-            int current = 1;
+            int current = 0;
             foreach (T i in input)
             {
                 foreach (IEnumerable<T> c in input.Skip(current++).CombinationsWithoutRepetition(length - 1))
@@ -68,7 +68,7 @@ public static class GeneratorEnumerableExtensions
             }
         }
     }
-    
+    /*
     public static IEnumerable<IEnumerable<T>> GetCombinationsWithRepetitions<T>(this IEnumerable<T> input,
         int length, IEqualityComparer<T> comparer)
     {
@@ -102,7 +102,7 @@ public static class GeneratorEnumerableExtensions
                 }    
             }
         }
-    }
+    }*/
 #endregion
 
 #region Subsets
