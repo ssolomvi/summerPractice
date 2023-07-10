@@ -26,22 +26,14 @@ public class Student :
         Group = group ?? throw new ArgumentNullException(nameof(group));
         if (string.IsNullOrEmpty(chosenCourse)) { throw new ArgumentNullException(nameof(chosenCourse)); }
 
-        ChosenCourseEnum chosenCourseValue;
-        if (Enum.TryParse(chosenCourse, true, out chosenCourseValue))
-        {
-            ChosenCourse = chosenCourseValue;
-        }
-        else
-        {
-            ChosenCourse = ChosenCourseEnum.Flood;
-        }
+        ChosenCourse = Enum.TryParse(chosenCourse, true, out ChosenCourseEnum chosenCourseValue) 
+            ? chosenCourseValue 
+            : ChosenCourseEnum.Flood;
     }
 
-    public int CourseNumber
-    {
+    public int CourseNumber =>
         // М8О-213Б-21
-        get => (_group[4] - '0');
-    }
+        (_group[4] - '0');
 
     public string Surname
     {
@@ -79,7 +71,7 @@ public class Student :
 
     public bool Equals(Student? other)
     {
-        Console.WriteLine("Student equals student method called");
+        // Console.WriteLine("Student equals student method called");
         
         if (other == null)
         {
@@ -93,6 +85,16 @@ public class Student :
                 _chosenCourse.Equals(other._chosenCourse));
     }
 
+    bool IEquatable<Student>.Equals(Student? other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return !Equals(other);
+    }
+
     public override string ToString()
     {
         return String.Format("[ SNP: {0} {1} {2}{3}Group: {4}{3}Chosen course for practice: {5}]", 
@@ -102,7 +104,7 @@ public class Student :
 
     public override bool Equals(object? obj)
     {
-        Console.WriteLine("Student equals object method called");
+        // Console.WriteLine("Student equals object method called");
 
         if (obj == null)
         {
