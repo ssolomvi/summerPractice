@@ -6,18 +6,8 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     ICloneable,
     IEnumerable<T>
 {
-    public override bool Equals(object? obj)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override int GetHashCode()
-    {
-        throw new NotImplementedException();
-    }
-
-    internal LinkedListNode<T>? head;
-    internal LinkedListNode<T>? last;
+    internal LinkedListNode<T>? _head;
+    internal LinkedListNode<T>? _last;
 
     #region Help Methods
 
@@ -27,9 +17,9 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         ThrowIfIndexNegative(index);
         if (index == 0)
         {
-            return head;
+            return _head;
         }
-        LinkedListNode<T> found = head;
+        LinkedListNode<T> found = _head;
         int i = 0;
         while (i != (index - 1))
         {
@@ -48,8 +38,8 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     private void InternalInsertNodeToEmptyList(LinkedListNode<T> newNode)
     {
         newNode.next = null;
-        head = newNode;
-        last = newNode;
+        _head = newNode;
+        _last = newNode;
     }
 
     private void InternalInsertNodeAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
@@ -58,7 +48,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         node.next = newNode;
         if (newNode.next == null)
         {
-            last = newNode;
+            _last = newNode;
         }
     }
 
@@ -72,7 +62,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     private void ThrowIfEmptyList()
     {
-        if (head == null)
+        if (_head == null)
         {
             throw new NullReferenceException("List is empty");
         }
@@ -80,7 +70,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     public LinkedListNode<T>? Find(T value, IEqualityComparer<T> comparer)
     {
-        LinkedListNode<T>? node = head;
+        LinkedListNode<T>? node = _head;
         if (node != null)
         {
             if (value != null)
@@ -116,7 +106,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     {
         int currSize = 0, allocatedFor = 2;
         T[] arr = new T[2];
-        foreach (LinkedListNode<T> item in this)
+        foreach (var item in this)
         {
             if (currSize == allocatedFor)
             {
@@ -124,7 +114,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
                 Array.Resize(ref arr, allocatedFor);
             }
 
-            arr[currSize++] = item.Value;
+            arr[currSize++] = item;
         }
 
         if (currSize != allocatedFor)
@@ -157,9 +147,9 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     {
         ArgumentNullException.ThrowIfNull(list);
 
-        foreach (LinkedListNode<T> item in list)
+        foreach (var item in list)
         {
-            AddLast(item.Value);
+            AddLast(item);
         }
     }
 
@@ -199,42 +189,42 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     #region Add methods
 
-    public LinkedListNode<T> AddFirst(T value)
+    public LinkedList<T> AddFirst(T value)
     {
-        LinkedListNode<T> result = new LinkedListNode<T>(this, value);
-        if (head == null)
+        LinkedListNode<T> result = new LinkedListNode<T>(value);
+        if (_head == null)
         {
             InternalInsertNodeToEmptyList(result);
         }
         else
         {
-            result.next = head;
-            head = result;
+            result.next = _head;
+            _head = result;
         }
 
-        return result;
+        return this;
     }
 
-    public LinkedListNode<T> AddLast(T value)
+    public LinkedList<T> AddLast(T value)
     {
-        LinkedListNode<T> result = new LinkedListNode<T>(this, value);
-        if (head == null)
+        LinkedListNode<T> result = new LinkedListNode<T>(value);
+        if (_head == null)
         {
             InternalInsertNodeToEmptyList(result);
         }
         else
         {
-            InternalInsertNodeAfter(last, result);
+            InternalInsertNodeAfter(_last, result);
         }
 
-        return result;
+        return this;
     }
 
-    public LinkedListNode<T> AddByIndex(T value, int index)
+    public LinkedList<T> AddByIndex(T value, int index)
     {
         ThrowIfIndexNegative(index);
-        LinkedListNode<T> result = new LinkedListNode<T>(this, value);
-        if (head == null)
+        LinkedListNode<T> result = new LinkedListNode<T>(value);
+        if (_head == null)
         {
             if (index > 0)
             {
@@ -245,7 +235,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         }
         else
         {
-            LinkedListNode<T> currNode = head;
+            LinkedListNode<T> currNode = _head;
             int i = 0;
             while (i < (index - 1))
             {
@@ -261,7 +251,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
             InternalInsertNodeAfter(currNode, result);
         }
 
-        return result;
+        return this;
     }
 
     #endregion
@@ -271,57 +261,57 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public T RemoveFirst()
     {
         ThrowIfEmptyList();
-        var removedValue = head.Value;
-        head = head.next;
+        var removedValue = _head.Value;
+        _head = _head.next;
         return removedValue;
     }
 
-    public T RemoveLast(T value)
+    public T RemoveLast()
     {
         ThrowIfEmptyList();
-        var removedValue = last.Value;
+        var removedValue = _last.Value;
 
-        if (head == last)
+        if (_head == _last)
         {
-            head = null;
-            last = null;
+            _head = null;
+            _last = null;
             return removedValue;
         }
 
-        LinkedListNode<T> currNode = head;
-        while (currNode.next != last)
+        LinkedListNode<T> currNode = _head;
+        while (currNode.next != _last)
         {
             currNode = currNode.next;
         }
 
         currNode.next = null;
-        last = currNode;
+        _last = currNode;
         return removedValue;
     }
 
-    public T RemoveByIndex(T value, int index)
+    public T RemoveByIndex(int index)
     {
         ThrowIfEmptyList();
         ThrowIfIndexNegative(index);
         T removedValue;
         if (index == 0)
         {
-            removedValue = head.Value;
-            if (head.next == null)
+            removedValue = _head.Value;
+            if (_head.next == null)
             {
-                head = null;
-                last = null;
+                _head = null;
+                _last = null;
             }
             else
             {
-                head = head.next;
+                _head = _head.next;
             }
 
             return removedValue;
         }
 
         int i = 0;
-        LinkedListNode<T> currNode = head;
+        LinkedListNode<T> currNode = _head;
         while (i < (index - 1))
         {
             if (currNode == null)
@@ -337,7 +327,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         currNode.next = currNode.next.next;
         if (currNode.next == null)
         {
-            last = currNode;
+            _last = currNode;
         }
 
         return removedValue;
@@ -350,12 +340,12 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Reverse()
     {
         LinkedList<T> reversed = new LinkedList<T>();
-        if (head == null)
+        if (_head == null)
         {
             return reversed;
         }
 
-        foreach (LinkedListNode<T> item in this)
+        foreach (T item in this)
         {
             reversed.AddLast(item);
         }
@@ -375,17 +365,17 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Concatenate(LinkedList<T> other)
     {
         LinkedList<T> concatenationResult = new LinkedList<T>();
-        if (head != null)
+        if (_head != null)
         {
-            foreach (LinkedListNode<T> item in this)
+            foreach (T item in this)
             {
                 concatenationResult.AddLast(item);
             }
         }
 
-        if (other.head != null)
+        if (other._head != null)
         {
-            foreach (LinkedListNode<T> item in other)
+            foreach (T item in other)
             {
                 concatenationResult.AddLast(item);
             }
@@ -407,16 +397,16 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     {
         LinkedList<T> intersectionResult = new LinkedList<T>();
 
-        if (head == null || other.head == null)
+        if (_head == null || other._head == null)
         {
             return intersectionResult;
         }
 
-        foreach (LinkedListNode<T> item in this)
+        foreach (T item in this)
         {
-            if (other.Find(item.Value, comparer) != null)
+            if (other.Find(item, comparer) != null)
             {
-                intersectionResult.AddLast(item.Value);
+                intersectionResult.AddLast(item);
             }
         }
 
@@ -436,19 +426,19 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     {
         LinkedList<T> unionResult = new LinkedList<T>();
 
-        if (head == null)
+        if (_head == null)
         {
-            foreach (LinkedListNode<T> item in other)
+            foreach (T item in other)
             {
-                unionResult.AddLast(item.Value);
+                unionResult.AddLast(item);
             }
 
             return unionResult;
         }
 
-        foreach (LinkedListNode<T> item in this)
+        foreach (T item in this)
         {
-            unionResult.AddLast(item.Value);
+            unionResult.AddLast(item);
         }
 
         if (other == null)
@@ -456,11 +446,11 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
             return unionResult;
         }
 
-        foreach (LinkedListNode<T> item in other)
+        foreach (T item in other)
         {
-            if (Find(item.Value, comparer) == null)
+            if (Find(item, comparer) == null)
             {
-                unionResult.AddLast(item.Value);
+                unionResult.AddLast(item);
             }
         }
 
@@ -479,24 +469,24 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Complement(LinkedList<T> other, IEqualityComparer<T> comparer)
     {
         ThrowIfEmptyList();
-        LinkedList<T> complementionResult = new LinkedList<T>();
+        LinkedList<T> complementResult = new LinkedList<T>();
         if (other == null)
         {
-            foreach (LinkedListNode<T> item in this)
+            foreach (T item in this)
             {
-                complementionResult.AddLast(item.Value);
+                complementResult.AddLast(item);
             }
         }
 
-        foreach (LinkedListNode<T> item in this)
+        foreach (var item in this)
         {
-            if (other.Find(item.Value) == null)
+            if (other?.Find(item, comparer) == null)
             {
-                complementionResult.AddLast(item.Value);
+                complementResult.AddLast(item);
             }
         }
 
-        return complementionResult;
+        return complementResult;
     }
 
     public static LinkedList<T> operator -(LinkedList<T> list, LinkedList<T> other)
@@ -511,7 +501,6 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Sort(SortingMethodsImpl.SortingMode sortingMode,
         SortingMethodsImpl.SortingMethod sortingMethod)
     {
-        T[] arr = ToArray();
         T[] sorted = ToArray().Sort(sortingMode, sortingMethod, Comparer<T>.Default);
         return new LinkedList<T>(sorted);
     }
@@ -519,7 +508,6 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Sort(SortingMethodsImpl.SortingMode sortingMode,
         SortingMethodsImpl.SortingMethod sortingMethod, IComparer<T> comparer)
     {
-        T[] arr = ToArray();
         T[] sorted = ToArray().Sort(sortingMode, sortingMethod, comparer);
         return new LinkedList<T>(sorted);
     }
@@ -527,7 +515,6 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Sort(SortingMethodsImpl.SortingMode sortingMode,
         SortingMethodsImpl.SortingMethod sortingMethod, Comparison<T> comparison)
     {
-        T[] arr = ToArray();
         T[] sorted = ToArray().Sort(sortingMode, sortingMethod, comparison);
         return new LinkedList<T>(sorted);
     }
@@ -537,19 +524,31 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     #region Action
 
-    public void DoAction(Action<T> action)
+    public LinkedList<T> DoAction(Action<T> action)
     {
         ThrowIfEmptyList();
-        foreach (LinkedListNode<T> item in this)
+        foreach (var item in this)
         {
-            action(item.Value);
+            action(item);
         }
+
+        return this;
     }
 
     #endregion
 
     #region Equal
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is LinkedList<T> another)
+        {
+            return Equals(another);
+        }
+
+        return false;
+    }
+    
     public bool Equals(LinkedList<T>? other)
     {
         if (other == null)
@@ -557,16 +556,16 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
             return false;
         }
 
-        if (head == null && other.head == null)
+        if (_head == null && other._head == null)
         {
             return true;
         }
-        else if (head == null || other.head == null)
+        else if (_head == null || other._head == null)
         {
             return false;
         }
 
-        LinkedListNode<T> currThis = head, currOther = other.head;
+        LinkedListNode<T> currThis = _head, currOther = other._head;
         while (currThis != null)
         {
             if (currOther == null)
@@ -592,7 +591,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         return true;
     }
 
-    public static bool operator ==(LinkedList<T> list, LinkedList<T> other)
+    public static bool operator ==(LinkedList<T>? list, LinkedList<T> other)
     {
         return list.Equals(other);
     }
@@ -606,15 +605,42 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     #region Operator*
 
-    // todo: method for operator*
-    public static LinkedList<T> operator *(LinkedList<T> list, LinkedList<T> other)
+    private LinkedList<T> Multiplying(LinkedList<T>? another)
     {
-        throw new NotImplementedException();
+        LinkedList<T> toReturn = new LinkedList<T>();
+        if (another == null)
+        {
+            return toReturn;
+        }
+
+        if (_head == null || another._head == null)
+        {
+            return toReturn;
+        }
+
+        LinkedListNode<T> currThis = _head, currAnother = another._head;
+
+        while (currThis != null && currAnother != null)
+        {
+            dynamic first = currThis.Value;
+            toReturn.AddLast(first * currAnother.Value);
+
+            currThis = currThis.next;
+            currAnother = currAnother.next;
+        }
+        
+        return toReturn;
+    }
+
+    public static LinkedList<T> operator *(LinkedList<T> list, LinkedList<T>? other)
+    {
+        return list.Multiplying(other);
     }
 
     #endregion
-    
-    
+
+    #region Conctracts and interfaces
+
     public object Clone()
     {
         return new LinkedList<T>(this);
@@ -622,11 +648,32 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     public IEnumerator<T> GetEnumerator()
     {
-        throw new NotImplementedException();
+        return new LinkedListEnum<T>(_head);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
     }
+    
+    public override string ToString()
+    {
+        string toReturn = "";
+        toReturn += string.Join(", ", this);
+        toReturn += Environment.NewLine;
+        return toReturn;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hc = new();
+        foreach (var item in this)
+        {
+            hc.Add(item);
+        }
+
+        return hc.ToHashCode();
+    }
+
+    #endregion
 }

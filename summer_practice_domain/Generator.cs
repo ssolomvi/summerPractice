@@ -139,14 +139,17 @@ private static IEnumerable<IEnumerable<T>> SubsetsHelpMethod<T>(this IEnumerable
 
 private static IEnumerable<IEnumerable<T>> SubsetsWithoutRepetitions<T>(this IEnumerable<T> input)
 {
-    int input_count = input.Count();
-    for (int length = 0; length <= input_count; length++)
+    var subsetsWithoutRepetitions = input as T[] ?? input.ToArray();
+    int input_count = subsetsWithoutRepetitions.Count();
+    for (int length = 0; length < input_count; length++)
     {
-        foreach (IEnumerable<T> c in input.SubsetsHelpMethod(length))
+        foreach (IEnumerable<T> c in subsetsWithoutRepetitions.SubsetsHelpMethod(length))
         {
             yield return c;
         }
     }
+
+    yield return subsetsWithoutRepetitions;
 }
 
 #endregion

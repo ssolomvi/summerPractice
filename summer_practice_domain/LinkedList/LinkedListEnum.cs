@@ -4,22 +4,48 @@ namespace summer_practice_domain.LinkedList;
 
 public sealed class LinkedListEnum<T> : IEnumerator<T>
 {
+    private LinkedListNode<T>? _head;
+    private LinkedListNode<T>? _current;
+    
+    public LinkedListEnum(LinkedListNode<T>? head)
+    {
+        _current = head;
+        _head = head;
+    }
+    
     public bool MoveNext()
     {
-        throw new NotImplementedException();
+        if (_current == null)
+        {
+            return false;
+        }
+
+        _current = _current.next;
+        return true;
     }
 
-    public void Reset()
+    public T Current
     {
-        throw new NotImplementedException();
-    }
+        get
+        {
+            if (_current != null)
+            {
+                return _current.Value;
+            }
 
-    public T Current { get; }
+            throw new NullReferenceException("Current node is null {0}");
+        }
+    }
 
     object IEnumerator.Current => Current;
-
+    
+    public void Reset()
+    {
+        _current = _head;
+    }
+    
     public void Dispose()
     {
-        throw new NotImplementedException();
+        // not necessary
     }
 }

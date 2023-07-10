@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq.Expressions;
 using summer_practice_domain;
 using summer_practice_domain.IntegralCalculation;
+using summer_practice_domain.LinkedList;
 
 namespace summer_practice
 {
@@ -235,6 +236,57 @@ namespace summer_practice
         }
 
         #endregion
+
+        #region lab5demo
+
+        public static summer_practice_domain.LinkedList.LinkedList<int> GetIntLists(int min, int max, int count)
+        {
+            Random randNum = new Random();
+            int[] set = Enumerable
+                .Repeat(0, 10)
+                .Select(i => randNum.Next(-100, 200))
+                .ToArray();
+
+            return new summer_practice_domain.LinkedList.LinkedList<int>(set);
+        }
+
+        private static void DoDisplay(int obj)
+        {
+            Console.WriteLine(obj + " --> ");
+        } 
+        
+        public static void Lab5Demo()
+        {
+            var list1 = GetIntLists(-100, 200, 10);
+            Console.WriteLine("List 1:{0}{1}", Environment.NewLine, list1);
+            list1.AddLast(99).AddFirst(0).AddByIndex(33, 2);
+            Console.WriteLine("Added new elements to list 1 by AddLast(99).AddFirst(0).AddByIndex(33, 2){0}{1}", Environment.NewLine, list1);
+            Console.WriteLine("Hash code of list1:{0}{1}", Environment.NewLine, list1.GetHashCode());
+            var list2 = GetIntLists(0, 100, 7);
+            var list3 = new summer_practice_domain.LinkedList.LinkedList<int>(list2);
+            Console.WriteLine("List 3, copy of list 2:{0}{1}", Environment.NewLine, list3);
+            list3.RemoveFirst();
+            list3.RemoveLast();
+            list3.RemoveByIndex(2);
+            Console.WriteLine("Removed some elements from list3 by RemoveFirst(), RemoveLast(), RemoveByIndex(2){0}{1}",
+                Environment.NewLine, list3);
+            Console.WriteLine("Item with index 0, 3, 10 in list1 = {0}, {1}, {2}", list1[0].ToString(), list1[3].ToString(), list1[10].ToString());
+            var list4 = !list1;
+            Console.WriteLine("List1 reversed (is list4):{0}{1}", Environment.NewLine, list4);
+            Console.WriteLine("List1 equals list4 ? {0}{1}", Environment.NewLine, list1==list4);
+            Console.WriteLine("List1 not equals list4 ? {0}{1}", Environment.NewLine, list1==list4);
+            Console.WriteLine("List3 concatenate list4:{0}{1}", Environment.NewLine, list3+list4);
+            Console.WriteLine("List4 intersect list1:{0}{1}", Environment.NewLine, list4&list1);
+            Console.WriteLine("List3 unite list1:{0}{1}", Environment.NewLine, list3|list1);
+            Console.WriteLine("List2 complement list1:{0}{1}", Environment.NewLine, list2-list1);
+            Console.WriteLine("List1 sorted:{0}{1}", Environment.NewLine, list1 = list1.Sort(SortingMethodsImpl.SortingMode.Descending, SortingMethodsImpl.SortingMethod.QuickSort));
+            Console.WriteLine("List1 displayed:{0}{1}", Environment.NewLine);
+            list1.DoAction(DoDisplay);
+            Console.WriteLine("List4 multiply list2:{0}{1}", Environment.NewLine, list4*list2);
+            Console.WriteLine("The end!");
+        }
+
+        #endregion
         
         static void Main(string[] args)
         {
@@ -242,13 +294,12 @@ namespace summer_practice
             // StudentTest();
             // Lab2Test();
             // Lab3Test();
-
-            LinkedListNode<int> a;
-
+            /*
             double lowerBound = 0, upperBound = 5;
             double eps = 1.0 / 10000000;
             IIntegralCalculation.Integrand integrand = IntegrandFunc;
-            Lab4Test(integrand, lowerBound, upperBound, eps);
+            Lab4Test(integrand, lowerBound, upperBound, eps);*/
+            Lab5Demo();
         }
     }
 }
