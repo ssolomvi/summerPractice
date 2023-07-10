@@ -117,12 +117,32 @@ public static IEnumerable<IEnumerable<T>> GetSubsetsWithoutRepetitions<T>(this I
     return input.SubsetsWithoutRepetitions();
 }
 
+private static IEnumerable<IEnumerable<T>> SubsetsHelpMethod<T>(this IEnumerable<T> input, int length)
+{
+    if (length <= 0)
+        yield return new List<T>();
+    else
+    {
+        int current = 1;
+        foreach (T i in input)
+        {
+            foreach (IEnumerable<T> c in input.Skip(current++).CombinationsWithoutRepetition(length - 1))
+            {
+                List<T> list = new List<T>();
+                list.Add(i);
+                list.AddRange(c);
+                yield return list;
+            }    
+        }
+    }
+}
+
 private static IEnumerable<IEnumerable<T>> SubsetsWithoutRepetitions<T>(this IEnumerable<T> input)
 {
     int input_count = input.Count();
     for (int length = 0; length <= input_count; length++)
     {
-        foreach (IEnumerable<T> c in input.CombinationsWithoutRepetition(length))
+        foreach (IEnumerable<T> c in input.SubsetsHelpMethod(length))
         {
             yield return c;
         }

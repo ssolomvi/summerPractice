@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq.Expressions;
 using summer_practice_domain;
+using summer_practice_domain.IntegralCalculation;
 
 namespace summer_practice
 {
@@ -60,18 +61,6 @@ namespace summer_practice
             hashTable.Add(st1, "a"); hashTable.Add(st2, "b"); hashTable.Add(st3, "c");
             hashTable.Remove(st1);
             Console.WriteLine(hashTable.Count);
-            
-            /*
-            string surname = Console.ReadLine(), name = Console.ReadLine(), patronymic = Console.ReadLine();
-            string group = Console.ReadLine(), chosenCourse = Console.ReadLine();
-            try
-            {
-                Student custom = new Student(surname, name, patronymic, group, chosenCourse);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e);
-            }*/
         }
 
         #region Lab2 test
@@ -237,7 +226,7 @@ namespace summer_practice
             var elapsedSimpson = GetMs(watchSimpson.ElapsedTicks);
             
             Console.WriteLine("With eps = {0}", eps.ToString(CultureInfo.InvariantCulture));
-            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", "Method name", "Time consumed ms", "Result", "Iterations count");
+            Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", "Method name", "Time consumed s", "Result", "Iterations count");
             Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", leftRectangleMethod.MethodName, elapsedLeft.ToString(), resLeft.Key.ToString(CultureInfo.InvariantCulture), resLeft.Value.ToString());
             Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", rightRectangleMethod.MethodName, elapsedRight.ToString(), resRight.Key.ToString(CultureInfo.InvariantCulture), resRight.Value.ToString());
             Console.WriteLine("| {0, -28} | {2, -20} |{1, -17} | {3, -16} |", middleRectangleMethod.MethodName, elapsedMiddle.ToString(), resMiddle.Key.ToString(CultureInfo.InvariantCulture), resMiddle.Value.ToString());
@@ -255,7 +244,7 @@ namespace summer_practice
             // Lab3Test();
 
             double lowerBound = 0, upperBound = 5;
-            double eps = 1.0 / 1000000000;
+            double eps = 1.0 / 10000000;
             IIntegralCalculation.Integrand integrand = IntegrandFunc;
             Lab4Test(integrand, lowerBound, upperBound, eps);
         }
