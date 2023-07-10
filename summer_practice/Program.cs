@@ -243,6 +243,8 @@ namespace summer_practice
             // Lab2Test();
             // Lab3Test();
 
+            LinkedListNode<int> a;
+
             double lowerBound = 0, upperBound = 5;
             double eps = 1.0 / 10000000;
             IIntegralCalculation.Integrand integrand = IntegrandFunc;

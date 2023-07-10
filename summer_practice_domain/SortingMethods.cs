@@ -214,8 +214,7 @@ public static class SortingMethodsImpl
     public static T[] Sort<T>(this T[] toSort, SortingMode sortingMode, SortingMethod sortingMethod)
         where T : IComparable<T>
     {
-        var comparer = Comparer<T>.Default;
-        return toSort.Sort(sortingMode, sortingMethod, comparer);
+        return toSort.Sort(sortingMode, sortingMethod, Comparer<T>.Default);
     }
 
     public static T[] Sort<T>(this T[] toSort, SortingMode sortingMode, SortingMethod sortingMethod, IComparer<T> comparer)
@@ -230,9 +229,10 @@ public static class SortingMethodsImpl
                 return MergeSorting(toSort, sortingMode, comparer);
             case SortingMethod.HeapSort:
                 return HeapSorting(toSort, sortingMode, comparer);
-            default:
+            case SortingMethod.QuickSort:
                 return QuickSorting(toSort, sortingMode, comparer);
         }
+        throw new ArgumentException("Incorrect sorting method passed {0}", nameof(sortingMethod));
     }
 
     public static T[] Sort<T>(this T[] toSort, SortingMode sortingMode, SortingMethod sortingMethod, Comparison<T> comparison)
