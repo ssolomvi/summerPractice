@@ -9,6 +9,19 @@ public interface IIntegralCalculation
 
     public delegate double Integrand(double x);
 
+    public static void CheckBoundsAndEps(ref double lowerBound, ref double upperBound, ref double eps)
+    {
+        if (lowerBound > upperBound)
+        {
+            (lowerBound, upperBound) = (upperBound, lowerBound);
+        }
+
+        if (eps < 0)
+        {
+            eps = -eps;
+        }
+    }
+
     public KeyValuePair<double, int> IntegralCalculation(Integrand integrand, double lowerBound, double highBound, double eps);
 }
 
@@ -21,16 +34,17 @@ public abstract class IntegralCalculationRuleRectangle : IIntegralCalculation
 
     public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
+        IIntegralCalculation.CheckBoundsAndEps(ref lowerBound, ref highBound, ref eps);
         double prevResult, result = 0;
         int iterationNumber = 1;
         do
         {
-            prevResult = result;
-            result = 0;
-            
             int numberOfPartitions = 1 << iterationNumber;
             double widthOfPartition = (highBound - lowerBound) / numberOfPartitions;
             
+            prevResult = result;
+            result = 0;
+
             for (int j = 0; j < numberOfPartitions; j++)
             {
                 result += MethodArgument(integrand, lowerBound, j, widthOfPartition);
@@ -94,6 +108,8 @@ public class IntegralCalculationTrapezoidal : IIntegralCalculation
     
     public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
+        IIntegralCalculation.CheckBoundsAndEps(ref lowerBound, ref highBound, ref eps);
+        
         double prevResult, result = 0;
         int iterationNumber = 1;
         do
@@ -127,6 +143,7 @@ public class IntegralCalculationSimpsonRule : IIntegralCalculation
     
     public KeyValuePair<double, int> IntegralCalculation(IIntegralCalculation.Integrand integrand, double lowerBound, double highBound, double eps)
     {
+        IIntegralCalculation.CheckBoundsAndEps(ref lowerBound, ref highBound, ref eps);
         double prevResult, result = 0;
         int iterationNumber = 1;
         
