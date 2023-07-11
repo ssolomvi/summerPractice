@@ -28,7 +28,14 @@ public static class SortingMethodsImpl
     /// <returns>Bool, which indicates that sorting mode is ascending and x is less than y</returns>
     private static bool CompareInner<T>(T x, T y, SortingMode sortingMode, IComparer<T> comparer)
     {
-        return ((sortingMode == SortingMode.Ascending) & (comparer.Compare(x, y) < 0));
+        int comparisonResult = comparer.Compare(x, y);
+        if ((comparisonResult < 0 && sortingMode == SortingMode.Ascending) ||
+            (comparisonResult > 0 && sortingMode == SortingMode.Descending))
+        {
+            return true;
+        }
+
+        return false;
     }
     
     private static void Swap<T>(T[] a, int i, int j)

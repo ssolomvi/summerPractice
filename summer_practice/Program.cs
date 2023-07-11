@@ -154,11 +154,11 @@ namespace summer_practice
             int Min = -100;
             int Max = 200;
             Random randNum = new Random();
-            int[] set = Enumerable
-                .Repeat(0, 10)
-                .Select(i => randNum.Next(Min, Max))
-                .ToArray();
-            // int[] set = { 9, 7, 6, 5, 3, 11, 10 };
+            // int[] set = Enumerable
+                // .Repeat(0, 10)
+                // .Select(i => randNum.Next(Min, Max))
+                // .ToArray();
+            int[] set = { 9, 7, 6, 5, 3, 11, 10 };
             Console.WriteLine("Original array");
             ToStringArray(set);
             Console.WriteLine("=====Selection sorted=====");
@@ -241,10 +241,14 @@ namespace summer_practice
 
         public static summer_practice_domain.LinkedList.LinkedList<int> GetIntLists(int min, int max, int count)
         {
+            if (min > max)
+            {
+                (min, max) = (max, min);
+            }
             Random randNum = new Random();
             int[] set = Enumerable
-                .Repeat(0, 10)
-                .Select(i => randNum.Next(-100, 200))
+                .Repeat(0, count)
+                .Select(i => randNum.Next(min, max))
                 .ToArray();
 
             return new summer_practice_domain.LinkedList.LinkedList<int>(set);
@@ -252,17 +256,23 @@ namespace summer_practice
 
         private static void DoDisplay(int obj)
         {
-            Console.WriteLine(obj + " --> ");
+            Console.Write(obj + " --> ");
         } 
         
         public static void Lab5Demo()
         {
-            var list1 = GetIntLists(-100, 200, 10);
+            var list1 = GetIntLists(-100, 200, 4);
             Console.WriteLine("List 1:{0}{1}", Environment.NewLine, list1);
-            list1.AddLast(99).AddFirst(0).AddByIndex(33, 2);
+            list1.AddLast(99).AddFirst((int)0).AddByIndex(33, 2);
             Console.WriteLine("Added new elements to list 1 by AddLast(99).AddFirst(0).AddByIndex(33, 2){0}{1}", Environment.NewLine, list1);
+            Console.WriteLine("Item with index 0, 3, 5 in list1 = {0}, {1}, {2}{3}", list1[0].ToString(), list1[3].ToString(), list1[5].ToString(), Environment.NewLine);
+            var list4 = !list1;
+            Console.WriteLine("List1 reversed (is list4):{0}{1}", Environment.NewLine, list4);
+            Console.WriteLine("List1 equals list4 ? {0}", list1==list4);
+            Console.WriteLine("List1 not equals list4 ? {0}", list1!=list4);
             Console.WriteLine("Hash code of list1:{0}{1}", Environment.NewLine, list1.GetHashCode());
-            var list2 = GetIntLists(0, 100, 7);
+            var list2 = GetIntLists(0, 100, 5);
+            Console.WriteLine("List 2:{0}{1}", Environment.NewLine, list2);
             var list3 = new summer_practice_domain.LinkedList.LinkedList<int>(list2);
             Console.WriteLine("List 3, copy of list 2:{0}{1}", Environment.NewLine, list3);
             list3.RemoveFirst();
@@ -270,19 +280,17 @@ namespace summer_practice
             list3.RemoveByIndex(2);
             Console.WriteLine("Removed some elements from list3 by RemoveFirst(), RemoveLast(), RemoveByIndex(2){0}{1}",
                 Environment.NewLine, list3);
-            Console.WriteLine("Item with index 0, 3, 10 in list1 = {0}, {1}, {2}", list1[0].ToString(), list1[3].ToString(), list1[10].ToString());
-            var list4 = !list1;
-            Console.WriteLine("List1 reversed (is list4):{0}{1}", Environment.NewLine, list4);
-            Console.WriteLine("List1 equals list4 ? {0}{1}", Environment.NewLine, list1==list4);
-            Console.WriteLine("List1 not equals list4 ? {0}{1}", Environment.NewLine, list1==list4);
             Console.WriteLine("List3 concatenate list4:{0}{1}", Environment.NewLine, list3+list4);
+            Console.WriteLine("List1:{0}{1}", Environment.NewLine, list1);
+            Console.WriteLine("List4:{0}{1}", Environment.NewLine, list4);
             Console.WriteLine("List4 intersect list1:{0}{1}", Environment.NewLine, list4&list1);
-            Console.WriteLine("List3 unite list1:{0}{1}", Environment.NewLine, list3|list1);
-            Console.WriteLine("List2 complement list1:{0}{1}", Environment.NewLine, list2-list1);
-            Console.WriteLine("List1 sorted:{0}{1}", Environment.NewLine, list1 = list1.Sort(SortingMethodsImpl.SortingMode.Descending, SortingMethodsImpl.SortingMethod.QuickSort));
-            Console.WriteLine("List1 displayed:{0}{1}", Environment.NewLine);
+            Console.WriteLine("List4 unite list1:{0}{1}", Environment.NewLine, list4|list1);
+            Console.WriteLine("List4 difference list1:{0}{1}", Environment.NewLine, list4-list1);
+            list1 = list1.Sort(SortingMethodsImpl.SortingMode.Descending, SortingMethodsImpl.SortingMethod.SelectionSort);
+            Console.WriteLine("List1 sorted:{0}{1}", Environment.NewLine, list1);
+            Console.WriteLine("List1 displayed:");
             list1.DoAction(DoDisplay);
-            Console.WriteLine("List4 multiply list2:{0}{1}", Environment.NewLine, list4*list2);
+            Console.WriteLine("{0}List4 multiply list2:{0}{1}", Environment.NewLine, list4*list2);
             Console.WriteLine("The end!");
         }
 
@@ -290,7 +298,11 @@ namespace summer_practice
         
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            // int[] b = new[] { 0, 1, 3 };
+            // Console.WriteLine("Intersect {0}", string.Join(", ", a.Intersect(b)));
+            // Console.WriteLine("Union {0}", string.Join(", ", a.Union(b)));
+            // Console.WriteLine("Difference {0}", string.Join(", ", a.Except(b)));
+            // Console.OutputEncoding = System.Text.Encoding.UTF8;
             // StudentTest();
             // Lab2Test();
             // Lab3Test();

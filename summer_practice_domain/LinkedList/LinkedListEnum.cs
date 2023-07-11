@@ -9,7 +9,7 @@ public sealed class LinkedListEnum<T> : IEnumerator<T>
     
     public LinkedListEnum(LinkedListNode<T>? head)
     {
-        _current = head;
+        _current = null;
         _head = head;
     }
     
@@ -17,11 +17,21 @@ public sealed class LinkedListEnum<T> : IEnumerator<T>
     {
         if (_current == null)
         {
-            return false;
+            if (_head == null)
+            {
+                return false;
+            }
+            _current = _head;
+            return true;
         }
 
-        _current = _current.next;
-        return true;
+        if (_current.next != null)
+        {
+            _current = _current.next;
+            return true;    
+        }
+
+        return false;
     }
 
     public T Current

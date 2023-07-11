@@ -75,7 +75,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         {
             if (value != null)
             {
-                while (node.next != null)
+                while (node != null)
                 {
                     if (comparer.Equals(node.item, value))
                     {
@@ -87,7 +87,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
             }
             else
             {
-                while (node.next != null)
+                while (node != null)
                 {
                     if (node.item == null)
                     {
@@ -162,6 +162,11 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     {
         get
         {
+            ThrowIfEmptyList();
+            if (index == 0)
+            {
+                return _head.Value;
+            }
             LinkedListNode<T> found = FindPrevByIndex(index);
             if (found.next == null)
             {
@@ -347,7 +352,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
         foreach (T item in this)
         {
-            reversed.AddLast(item);
+            reversed.AddFirst(item);
         }
 
         return reversed;
@@ -395,6 +400,11 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     public LinkedList<T> Intersection(LinkedList<T> other, IEqualityComparer<T> comparer)
     {
+        return new LinkedList<T>(ToArray().Intersect(other.ToArray(), comparer));
+    }
+    /*
+    public LinkedList<T> Intersection(LinkedList<T> other, IEqualityComparer<T> comparer)
+    {
         LinkedList<T> intersectionResult = new LinkedList<T>();
 
         if (_head == null || other._head == null)
@@ -411,7 +421,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         }
 
         return intersectionResult;
-    }
+    }*/
 
     public static LinkedList<T> operator &(LinkedList<T> list, LinkedList<T> another)
     {
@@ -422,6 +432,14 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     #region Union
 
+    public LinkedList<T> Unite(LinkedList<T> other, IEqualityComparer<T> comparer)
+    {
+        // T[] first = ToArray();
+        // T[] second = other.ToArray();
+        return new LinkedList<T>(ToArray().Union(other.ToArray(), comparer));
+    }
+    
+/*
     public LinkedList<T> Unite(LinkedList<T> other, IEqualityComparer<T> comparer)
     {
         LinkedList<T> unionResult = new LinkedList<T>();
@@ -455,7 +473,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         }
 
         return unionResult;
-    }
+    }*/
 
     public static LinkedList<T> operator |(LinkedList<T> list, LinkedList<T> another)
     {
@@ -464,15 +482,23 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     #endregion
 
-    #region Complement
+    #region Difference
 
-    public LinkedList<T> Complement(LinkedList<T> other, IEqualityComparer<T> comparer)
+    /*
+    public LinkedList<T> Difference(LinkedList<T> other, IEqualityComparer<T> comparer)
+    {
+        // T[] first = ToArray();
+        // T[] second = other.ToArray();
+        return new LinkedList<T>(ToArray().Except(other.ToArray(), comparer));
+    }*/
+    
+    public LinkedList<T> Difference(LinkedList<T> other, IEqualityComparer<T> comparer)
     {
         ThrowIfEmptyList();
         LinkedList<T> complementResult = new LinkedList<T>();
         if (other == null)
         {
-            foreach (T item in this)
+            foreach (var item in this)
             {
                 complementResult.AddLast(item);
             }
@@ -491,7 +517,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
 
     public static LinkedList<T> operator -(LinkedList<T> list, LinkedList<T> other)
     {
-        return list.Complement(other, EqualityComparer<T>.Default);
+        return list.Difference(other, EqualityComparer<T>.Default);
     }
 
     #endregion
@@ -501,8 +527,8 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     public LinkedList<T> Sort(SortingMethodsImpl.SortingMode sortingMode,
         SortingMethodsImpl.SortingMethod sortingMethod)
     {
-        T[] sorted = ToArray().Sort(sortingMode, sortingMethod, Comparer<T>.Default);
-        return new LinkedList<T>(sorted);
+        // T[] sorted = ToArray().Sort(sortingMode, sortingMethod, Comparer<T>.Default);
+        return new LinkedList<T>(ToArray().Sort(sortingMode, sortingMethod, Comparer<T>.Default));
     }
 
     public LinkedList<T> Sort(SortingMethodsImpl.SortingMode sortingMode,
@@ -551,7 +577,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
     
     public bool Equals(LinkedList<T>? other)
     {
-        if (other == null)
+        if (other is null)
         {
             return false;
         }
@@ -591,7 +617,7 @@ public sealed class LinkedList<T> : IEquatable<LinkedList<T>>,
         return true;
     }
 
-    public static bool operator ==(LinkedList<T>? list, LinkedList<T> other)
+    public static bool operator ==(LinkedList<T>? list, LinkedList<T>? other)
     {
         return list.Equals(other);
     }
